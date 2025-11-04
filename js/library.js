@@ -32,4 +32,16 @@ export function renderLibrary() {
             </div>
         </div>
     `;
+
+    if (!index.length) {
+        wrapper.innerHTML += `
+            <div class="text-center text-light py-5">
+                <p>No capsules yet. Click <strong>New Capsule</strong> to create one!</p>
+            </div>
+        `;
+        container.appendChild(wrapper);
+        attachTopButtons();
+        return;
+    }
+    
 }
