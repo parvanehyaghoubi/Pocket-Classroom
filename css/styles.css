@@ -1,0 +1,26 @@
+/* Custom CSS Style */
+.custom-border {
+    border-bottom: 1px solid #e63956 !important;
+}
+
+#new-capsule-btn,
+#import-json-btn {
+    transition: all 0.1s ease;
+}
+
+#new-capsule-btn:hover,
+#import-json-btn:hover {
+    transform: scale(1.05);
+    background-color: #e63956;
+    color: #000;
+}
+
+#new-capsule-btn:hover {
+    background-color: #ffffff22;
+    color: #fff;
+}
+
+body {
+    background-color: #0d1117;
+    color: #e6edf3;
+}
