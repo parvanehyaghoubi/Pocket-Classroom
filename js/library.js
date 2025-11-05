@@ -44,4 +44,50 @@ export function renderLibrary() {
         return;
     }
     
+    const grid = document.createElement('div');
+    grid.className = 'row g-3';
+
+    index.forEach(cap => {
+        const card = document.createElement('div');
+        card.className = 'col-md-4';
+        card.innerHTML = `
+            <div class="card bg-dark text-light h-100 shadow-sm border border-white">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">${cap.title}</h5>
+                    <span class="badge bg-primary mb-2">${cap.level}</span>
+                    <p class="card-text small text-info mb-1">${cap.subject}</p>
+                    <p class="text-light small mb-3">Updated ${timeAgo(cap.updatedAt)}</p>
+
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small>Quiz best:</small>
+                            <small>${cap.bestScore ?? 0}%</small>
+                        </div>
+                        <div class="progress mb-3" style="height:6px;">
+                            <div class="progress-bar bg-success" style="width:${cap.bestScore ?? 0}%"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <small>Known cards:</small>
+                            <small>${cap.knownCards ?? 0}</small>
+                        </div>
+
+                        <div class="btn-group w-100">
+                            <button class="btn btn-outline-light btn-sm learn-btn" data-id="${cap.id}" aria-label="Learn">Learn</button>
+                            <button class="btn btn-outline-warning btn-sm edit-btn" data-id="${cap.id}" aria-label="Edit">Edit</button>
+                            <button class="btn btn-outline-info btn-sm export-btn" data-id="${cap.id}" aria-label="Export">Export</button>
+                            <button class="btn btn-outline-danger btn-sm delete-btn" data-id="${cap.id}" aria-label="Delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    wrapper.appendChild(grid);
+    container.appendChild(wrapper);
+
+    attachTopButtons();
+    attachCardActions();
 }
