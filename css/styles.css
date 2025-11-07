@@ -24,3 +24,29 @@ body {
     background-color: #0d1117;
     color: #e6edf3;
 }
+
+#library-view .card {
+    background-color: #161b22;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+#library-view .card:hover {
+    background-color: #1b222c;
+    transform: translateY(-3px);
+}
+
+#library-view .btn {
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+#library-view .badge {
+    font-size: 0.75rem;
+    border-radius: 8px;
+}
+
+#library-view .progress {
+    background-color: #2d333b;
+    border-radius: 5px;
+}
