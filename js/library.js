@@ -91,3 +91,18 @@ export function renderLibrary() {
     attachTopButtons();
     attachCardActions();
 }
+
+// Top Buttons
+function attachTopButtons() {
+    const newBtn = document.getElementById('new-capsule-btn');
+
+    if (newBtn) {
+        newBtn.addEventListener('click', () => {
+            const id = Date.now();
+            switchSection('author', id);
+            if (window.prepareNewCapsule) {
+                window.prepareNewCapsule(id);
+            }
+        });
+    }
+}
