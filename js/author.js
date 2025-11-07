@@ -95,4 +95,69 @@ export function renderAuthor(editId = null) {
         ).join("");
     }
 
+    function renderQuiz() {
+    if (!quiz.length) {
+        quizList.innerHTML = `<p class="text-light">No quiz questions available.</p>`;
+        return;
+    }
+
+    quizList.innerHTML = quiz.map((q, i) => {
+        const question = q.question ?? "";
+        const correct = Number(q.correct ?? 0);
+        const explanation = q.explanation ?? "";
+        const choices = Array.isArray(q.choices) ? q.choices : ["", "", "", ""];
+
+        return `
+        <div class="border rounded p-2 mb-3">
+            <label>Question</label>
+            <input class="form-control mb-2" value="${question}" data-quiz="${i}" data-field="question">
+
+            <div class="row">
+                ${choices.map((c, j) => `
+                    <div class="col-6 mb-2">
+                        <input class="form-control" placeholder="Option ${j + 1}" value="${c ?? ''}" data-quiz="${i}" data-choice="${j}">
+                    </div>`
+                ).join("")}
+            </div>
+
+            <label>Correct index (0–3)</label>
+            <input class="form-control mb-2" type="number" min="0" max="3" value="${correct}" data-quiz="${i}" data-field="correct">
+
+            <label>Explanation (optional)</label>
+            <textarea class="form-control" rows="1" data-quiz="${i}" data-field="explanation">${explanation}</textarea>
+
+            <button class="btn btn-sm btn-danger mt-2" data-removequiz="${i}" aria-label="Remove content">✕ Remove</button>
+        </div>`;
+        }).join("");
+
+        // Delete Question
+        quizList.addEventListener("click", e => {
+            if (e.target.dataset.removequiz !== undefined) {
+                quiz.splice(Number(e.target.dataset.removequiz), 1);
+                renderQuiz();
+            }
+        });
+
+        // Change input
+        quizList.addEventListener("input", e => {
+            const quizIndex = e.target.dataset.quiz;
+            const field = e.target.dataset.field;
+            const choiceIndex = e.target.dataset.choice;
+
+            if (quizIndex !== undefined) {
+                const qi = Number(quizIndex);
+                if (field === "question") {
+                    quiz[qi].question = e.target.value;
+                } else if (field === "correct") {
+                    const val = parseInt(e.target.value);
+                    quiz[qi].correct = isNaN(val) ? 0 : val;
+                } else if (field === "explanation") {
+                    quiz[qi].explanation = e.target.value;
+                } else if (choiceIndex !== undefined) {
+                    quiz[qi].choices[Number(choiceIndex)] = e.target.value;
+                }
+            }
+        });
+    }
+
 }
