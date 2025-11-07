@@ -71,4 +71,13 @@ export function renderLearn(selectedId = null) {
             else renderQuiz();
         });
     });
+
+    // Export
+    exportBtn.addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(capsuleData, null, 2)], { type: "application/json" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${capsuleData.meta?.title || "capsule"}.json`;
+        a.click();
+    });
 }
