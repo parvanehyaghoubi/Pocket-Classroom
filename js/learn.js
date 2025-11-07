@@ -41,4 +41,21 @@ export function renderLearn(selectedId = null) {
         </div>
     `;
 
+    const selector = container.querySelector("#capsuleSelector");
+    const content = container.querySelector("#learnContent");
+    const tabs = container.querySelectorAll("#learnTabs .nav-link");
+    const exportBtn = container.querySelector("#exportCapsule");
+
+    // Capsule Selector
+    selector.addEventListener("change", (e) => {
+        currentId = e.target.value;
+        window.currentLearnId = currentId;
+        capsuleData = loadCapsule(currentId);
+
+        const activeTab = container.querySelector("#learnTabs .nav-link.active").dataset.mode;
+        if (activeTab === "notes") renderNotes();
+        else if (activeTab === "flashcards") renderFlashcards();
+        else renderQuiz();
+    });
+
 }
