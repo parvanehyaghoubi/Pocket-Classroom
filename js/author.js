@@ -279,3 +279,16 @@ export function renderAuthor(editId = null) {
         });
     }
 }
+
+// Prepare to create new capsule
+window.prepareNewCapsule = function (tempId) {
+    const container = document.getElementById("author-view");
+    container.innerHTML = ""; 
+
+    renderAuthor(null);
+
+    window.newCapsuleTempId = tempId;
+};
+
+// Make sure the function is available globally
+window.renderAuthor = renderAuthor;
