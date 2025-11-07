@@ -58,4 +58,17 @@ export function renderLearn(selectedId = null) {
         else renderQuiz();
     });
 
+    // Tabs 
+    tabs.forEach(tab => {
+        tab.addEventListener("click", e => {
+            e.preventDefault();
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const mode = tab.dataset.mode;
+            if (mode === "notes") renderNotes();
+            else if (mode === "flashcards") renderFlashcards();
+            else renderQuiz();
+        });
+    });
 }
