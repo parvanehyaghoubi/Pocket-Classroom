@@ -44,3 +44,20 @@ function showView(name) {
         renderLearn(window.currentLearnId || null);
     }
 }
+
+// Default view
+showView('library');
+
+const navButtons = document.querySelectorAll('.nav-btn');
+const navbarCollapse = document.getElementById('mainNavbar');
+
+navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (navbarCollapse.classList.contains('show')) {
+            const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+            if (bsCollapse) {
+                bsCollapse.hide();
+            }
+        }
+    });
+});
