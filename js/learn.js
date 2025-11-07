@@ -399,4 +399,33 @@ export function renderLearn(selectedId = null) {
         renderQuestion();
     }
 
+    function loadCapsule(id) {
+        const raw = JSON.parse(localStorage.getItem(`pc_capsule_${id}`) || "{}");
+
+        // normalize notes -> array of strings (keep as strings)
+        const notes = Array.isArray(raw.notes) ? raw.notes.slice() : [];
+
+        // normalize flashcards -> [{front, back}]
+        const flashcards = Array.isArray(raw.flashcards)
+            ? raw.flashcards.map(f => ({ front: f.front ?? f.front ?? "", back: f.back ?? f.back ?? "" }))
+            : [];
+
+        // normalize quiz -> {question, options, answer, explanation}
+        const quiz = Array.isArray(raw.quiz)
+            ? raw.quiz.map(q => ({
+                question: q.question ?? q.q ?? "",
+                options: q.choices ?? q.options ?? [],
+                answer: Number(q.correct ?? q.answer ?? 0) || 0,
+                explanation: q.explanation ?? q.expl ?? ""
+            }))
+            : [];
+
+        return {
+            meta: raw.meta || {},
+            notes,
+            flashcards,
+            quiz
+        };
+    }
+
 }
