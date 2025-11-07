@@ -80,4 +80,37 @@ export function renderLearn(selectedId = null) {
         a.download = `${capsuleData.meta?.title || "capsule"}.json`;
         a.click();
     });
+
+    // Notes
+    function renderNotes() {
+        const notes = capsuleData.notes || [];
+
+        if (notes.length === 0) {
+            content.innerHTML = `<p class="text-light">No notes found for this capsule.</p>`;
+            return;
+        }
+
+        content.innerHTML = `
+            <input type="text" id="noteSearch" class="form-control bg-dark text-light mb-1" placeholder="Search notes...">
+            <small class="text-light d-block mb-3">
+                This notes belong to capsule <strong>Web Development Course</strong> 
+                with <strong>Advanced</strong> level.
+            </small>
+            <ol id="noteList" class="list-group list-group-numbered"></ol>
+        `;
+
+        const list = content.querySelector("#noteList");
+        const search = content.querySelector("#noteSearch");
+
+        const renderList = (filter = "") => {
+            const f = filter.toLowerCase();
+            list.innerHTML = notes
+                .filter(n => n && n.toLowerCase().includes(f))
+                .map(n => `<li class="list-group-item bg-dark text-light border-secondary">${n}</li>`)
+                .join("");
+        };
+
+        search.addEventListener("input", e => renderList(e.target.value));
+        renderList();
+    }
 }
