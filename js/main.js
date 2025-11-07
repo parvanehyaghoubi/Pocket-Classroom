@@ -19,3 +19,28 @@ document.querySelectorAll('[data-view]').forEach(link => {
         showView(target);
     });
 });
+
+function showView(name) {
+    for (const [key, section] of Object.entries(views)) {
+        section.classList.toggle('d-none', key !== name);
+    }
+
+    // Update navbar active link
+    document.querySelectorAll('[data-view]').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('data-view') === name);
+    });
+
+    // Render section content
+    if (name === 'library') renderLibrary();
+    else if (name === 'author') {
+        if (window.prepareNewCapsule) {
+            const tempId = Date.now();
+            window.prepareNewCapsule(tempId);
+        } else {
+            renderAuthor();
+        }
+    }
+    else if (name === 'learn') {
+        renderLearn(window.currentLearnId || null);
+    }
+}
