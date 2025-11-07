@@ -217,4 +217,57 @@ export function renderAuthor(editId = null) {
         }
     });
 
+    document.getElementById("saveBtn").addEventListener("click", () => {
+        const title = document.getElementById("meta-title").value.trim();
+        if (!title) return alert("Title is required!");
+
+        const capsule = {
+            id: editId || window.newCapsuleTempId || crypto.randomUUID(),
+            schema: "pocket-classroom/v1",
+            meta: {
+                title,
+                subject: document.getElementById("meta-subject").value.trim(),
+                level: document.getElementById("meta-level").value,
+                description: document.getElementById("meta-description").value.trim(),
+            },
+            notes: document
+                .getElementById("notes")
+                .value.split("\n")
+                .map(n => n.trim())
+                .filter(n => n),
+            flashcards,
+            quiz,
+            updatedAt: new Date().toISOString(),
+        };
+
+        delete window.newCapsuleTempId;
+
+        const indexKey = "pc_capsules_index";
+        let indexList = JSON.parse(localStorage.getItem(indexKey) || "[]");
+
+        const idx = indexList.findIndex(c => c.id === capsule.id);
+        if (idx >= 0) {
+            // merge meta & updatedAt into existing entry
+            indexList[idx] = {
+                ...indexList[idx],
+                title: capsule.meta.title,
+                subject: capsule.meta.subject,
+                level: capsule.meta.level,
+                updatedAt: capsule.updatedAt
+            };
+        } 
+        else {
+            indexList.push({
+                id: capsule.id,
+                title: capsule.meta.title,
+                subject: capsule.meta.subject,
+                level: capsule.meta.level,
+                updatedAt: capsule.updatedAt
+            });
+        }
+
+        localStorage.setItem(indexKey, JSON.stringify(indexList));
+        localStorage.setItem(`pc_capsule_${capsule.id}`, JSON.stringify(capsule));
+        alert("Capsule saved successfully ✅");
+    });
 }
