@@ -272,4 +272,89 @@ export function renderLearn(selectedId = null) {
         renderCard();
     }
 
+    // Quiz
+    function renderQuiz() {
+        const quiz = capsuleData.quiz || [];
+        if (quiz.length === 0) {
+            content.innerHTML = `<p class="text-light">No quiz questions available.</p>`;
+            return;
+        }
+
+        let qIndex = 0;
+        let score = 0;
+        const bestScoreKey = `quiz_best_${currentId}`;
+        const bestScore = Number(localStorage.getItem(bestScoreKey) || 0);
+
+        const renderQuestion = () => {
+            const q = quiz[qIndex];
+            content.innerHTML = `
+                <div class="card bg-dark border text-light p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-secondary">Q ${qIndex + 1} / ${quiz.length}</span>
+                        
+                    </div>
+                    <h5>${q.question}</h5>
+                    <div id="answers" class="mt-3">
+                        ${q.options.map((opt, i) => `
+                            <button class="btn btn-outline-light w-100 text-start mb-2" data-index="${i}">
+                                ${String.fromCharCode(65 + i)}. ${opt}
+                            </button>
+                        `).join("")}
+                    </div>
+                </div>
+            `;
+
+            const buttons = content.querySelectorAll("#answers button");
+            buttons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    btn.addEventListener("click", () => {
+                        const chosen = Number(btn.dataset.index);
+                        const correct = chosen === Number(q.answer);
+
+                        btn.classList.remove("btn-outline-light");
+                        btn.classList.add(correct ? "btn-success" : "btn-danger");
+
+                        // Save answers
+                        if (correct) score++;
+
+                        // Save progress in localstorage
+                        const capsule = JSON.parse(localStorage.getItem(`pc_capsule_${currentId}`) || "{}");
+
+                        capsule.progress = capsule.progress || {
+                            total: quiz.length,
+                            correct: 0,
+                            knownCards: 0,
+                            lastScore: 0
+                        };
+
+                        if (correct) capsule.progress.knownCards++;
+
+                        // Update Progress
+                        capsule.progress.correct = score;
+                        capsule.progress.lastScore = Math.round((score / quiz.length) * 100);
+
+                        // Save again in localstorage
+                        localStorage.setItem(`pc_capsule_${currentId}`, JSON.stringify(capsule));
+
+                        const indexList = JSON.parse(localStorage.getItem("pc_capsules_index") || "[]");
+                        const idx = indexList.findIndex(c => c.id === currentId);
+                        if (idx >= 0) {
+                            indexList[idx].progress = capsule.progress.lastScore;
+                            indexList[idx].updatedAt = new Date().toISOString();
+                            localStorage.setItem("pc_capsules_index", JSON.stringify(indexList));
+                        };
+
+                        buttons.forEach(b => (b.disabled = true));
+
+                        setTimeout(() => {
+                            qIndex++;
+                            if (qIndex < quiz.length) renderQuestion();
+                            else showResult();
+                        }, 800);
+                    });
+
+                });
+            });
+        };
+
 }
