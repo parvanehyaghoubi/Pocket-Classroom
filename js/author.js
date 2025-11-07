@@ -82,4 +82,17 @@ export function renderAuthor(editId = null) {
         </div>
     </div>`;
 
+    const flashList = document.getElementById("flashcardsList");
+    const quizList = document.getElementById("quizList");
+
+    function renderFlashcards() {
+        flashList.innerHTML = flashcards.map((f, i) => `
+            <div class="d-flex gap-2 align-items-center mb-2">
+                <input class="form-control" placeholder="Front" value="${f.front}" data-index="${i}" data-field="front">
+                <input class="form-control" placeholder="Back" value="${f.back}" data-index="${i}" data-field="back">
+                <button class="btn btn-sm btn-danger" data-remove="${i}">✕</button>
+            </div>`
+        ).join("");
+    }
+
 }
