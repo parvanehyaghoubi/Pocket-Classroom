@@ -229,5 +229,19 @@ export function renderLearn(selectedId = null) {
                 renderCard();
             };
         };
+
+        document.onkeydown = (e) => {
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.tagName === "INPUT" || activeElement.tagName === "TEXTAREA" || activeElement.isContentEditable)) return;
+
+            const flashcardInner = content.querySelector(".flashcard-inner");
+
+            if (e.code === "Space") {
+                e.preventDefault();
+                flipped = !flipped;
+                if (flashcardInner)
+                    flashcardInner.style.transform = flipped ? "rotateY(180deg)" : "rotateY(0deg)";
+                return;
+            }
     }
 }
