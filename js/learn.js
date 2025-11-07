@@ -243,5 +243,33 @@ export function renderLearn(selectedId = null) {
                     flashcardInner.style.transform = flipped ? "rotateY(180deg)" : "rotateY(0deg)";
                 return;
             }
+
+            if (e.key === "]" || e.code === "BracketRight") {
+                e.preventDefault();
+                currentSectionIndex = (currentSectionIndex + 1) % sections.length;
+                const nextSection = sections[currentSectionIndex];
+                setActiveTab(nextSection);
+
+                if (nextSection === "notes" && typeof renderNotes === "function") renderNotes();
+                else if (nextSection === "flashcards") renderFlashcards();
+                else if (nextSection === "quiz" && typeof renderQuiz === "function") renderQuiz();
+                return;
+            }
+
+            if (e.key === "[" || e.code === "BracketLeft") {
+                e.preventDefault();
+                currentSectionIndex = (currentSectionIndex - 1 + sections.length) % sections.length;
+                const prevSection = sections[currentSectionIndex];
+                setActiveTab(prevSection);
+
+                if (prevSection === "notes" && typeof renderNotes === "function") renderNotes();
+                else if (prevSection === "flashcards") renderFlashcards();
+                else if (prevSection === "quiz" && typeof renderQuiz === "function") renderQuiz();
+                return;
+            }
+        };
+
+        renderCard();
     }
+
 }
