@@ -160,4 +160,61 @@ export function renderAuthor(editId = null) {
         });
     }
 
+    renderFlashcards();
+    renderQuiz();
+
+    document.getElementById("addFlashcard").addEventListener("click", () => {
+        flashcards.push({ front: "", back: "" });
+        renderFlashcards();
+    });
+
+    flashList.addEventListener("input", e => {
+        const i = e.target.dataset.index;
+        const field = e.target.dataset.field;
+        if (i !== undefined) flashcards[i][field] = e.target.value;
+    });
+
+    flashList.addEventListener("click", e => {
+        if (e.target.dataset.remove !== undefined) {
+            flashcards.splice(e.target.dataset.remove, 1);
+            renderFlashcards();
+        }
+    });
+
+    document.getElementById("addQuiz").addEventListener("click", () => {
+        quiz.push({
+            question: "",
+            choices: ["", "", "", ""],
+            correct: 0,
+            explanation: "",
+        });
+        renderQuiz();
+    });
+
+    quizList.addEventListener("click", e => {
+        if (e.target.dataset.removequiz !== undefined) {
+            quiz.splice(e.target.dataset.removequiz, 1);
+            renderQuiz();
+        }
+    });
+
+    quizList.addEventListener("input", e => {
+        const quizIndex = e.target.dataset.quiz;
+        const field = e.target.dataset.field;
+        const choiceIndex = e.target.dataset.choice;
+
+        if (quizIndex !== undefined) {
+            const qi = Number(quizIndex);
+            if (field === "question") {
+            quiz[qi].question = e.target.value;
+            } else if (field === "correct") {
+            quiz[qi].correct = parseInt(e.target.value) || 0;
+            } else if (field === "explanation") {
+            quiz[qi].explanation = e.target.value;
+            } else if (choiceIndex !== undefined) {
+            quiz[qi].choices[Number(choiceIndex)] = e.target.value;
+            }
+        }
+    });
+
 }
