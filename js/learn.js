@@ -357,4 +357,46 @@ export function renderLearn(selectedId = null) {
             });
         };
 
+        const showResult = () => {
+            const percent = quiz.length > 0 ? Math.round((score / quiz.length) * 100) : 0;
+
+            let newBest = bestScore;
+            if (percent > bestScore) {
+                newBest = percent;
+            } else if (percent < bestScore) {
+                const penalty = 10 // Decrease 10 score per wrong answer
+                newBest = Math.max(0, bestScore - penalty); // Avoid being negative
+            }
+
+            localStorage.setItem(bestScoreKey, newBest);
+
+            // Update progress in capsule index for Library view 
+            const indexList = JSON.parse(localStorage.getItem("pc_capsules_index") || "[]");
+            const idx = indexList.findIndex(c => String(c.id) === String(currentId));
+
+            if (idx >= 0) {
+                indexList[idx].bestScore = newBest; // Update percent of progress
+                indexList[idx].updatedAt = new Date().toISOString();
+                localStorage.setItem("pc_capsules_index", JSON.stringify(indexList));
+            }
+
+            window.dispatchEvent(new Event("capsuleProgressUpdated"));
+
+            content.innerHTML = `
+                <div class="text-center p-4">
+                    <h4>Your Score: ${percent}%</h4>
+                    <button class="btn btn-outline-light mt-3" id="retryQuiz">Retry</button>
+                </div>
+            `;
+
+            content.querySelector("#retryQuiz").addEventListener("click", () => {
+                qIndex = 0;
+                score = 0;
+                renderQuestion();
+            });
+        };
+
+        renderQuestion();
+    }
+
 }
