@@ -114,4 +114,7 @@ function attachTopButtons() {
         });
     });
     
+
+    // Import JSON
+    const importBtn = document.getElementById('import-json-btn');
 }
