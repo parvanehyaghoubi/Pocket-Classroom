@@ -428,4 +428,21 @@ export function renderLearn(selectedId = null) {
         };
     }
 
+    // Default tab
+    renderNotes();
+
+
+    const now = new Date().toISOString();
+    if (capsuleData && capsuleData.meta) {
+        capsuleData.meta.updatedAt = now;
+        localStorage.setItem(`pc_capsule_${currentId}`, JSON.stringify(capsuleData));
+
+        const indexList = JSON.parse(localStorage.getItem('pc_capsules_index') || '[]');
+        const idx = indexList.findIndex(c => c.id === currentId);
+        if (idx >= 0) {
+            indexList[idx].updatedAt = now;
+        }
+        localStorage.setItem('pc_capsules_index', JSON.stringify(indexList));
+    }
+
 }
