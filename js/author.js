@@ -270,4 +270,12 @@ export function renderAuthor(editId = null) {
         localStorage.setItem(`pc_capsule_${capsule.id}`, JSON.stringify(capsule));
         alert("Capsule saved successfully ✅");
     });
+
+    // Back to library
+    const backBtn = document.getElementById("backBtn");
+    if (backBtn) {
+        backBtn.addEventListener("click", () => {
+            switchSection("library"); 
+        });
+    }
 }
