@@ -105,4 +105,13 @@ function attachTopButtons() {
             }
         });
     }
+
+    const editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            switchSection('author', Number(id));
+        });
+    });
+    
 }
