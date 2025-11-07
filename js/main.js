@@ -61,3 +61,31 @@ navButtons.forEach(btn => {
         }
     });
 });
+
+export function switchSection(view, id = null) {
+    // Hide view
+    document.querySelectorAll('.view').forEach(v => v.classList.add('d-none'));
+
+    // Show active view
+    const active = document.getElementById(`${view}-view`);
+    if (active) active.classList.remove('d-none');
+
+    // Active navbar link
+    const navLinks = document.querySelectorAll('.navbar .nav-btn');
+    navLinks.forEach(link => link.classList.remove('active'));
+    const navLink = document.querySelector(`.navbar .nav-btn[data-view="${view}"]`);
+    if (navLink) navLink.classList.add('active');
+
+    // Save ID for learn
+    if (view === 'learn') {
+        window.currentLearnId = id;
+    }
+
+    if (view === 'library' && window.renderLibrary) {
+        window.renderLibrary();
+    } else if (view === 'author' && window.renderAuthor) {
+        window.renderAuthor(Number(id));
+    } else if (view === 'learn' && window.renderLearn) {
+        window.renderLearn(Number(id));
+    }
+}
