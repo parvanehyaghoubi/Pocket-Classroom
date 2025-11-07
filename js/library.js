@@ -117,4 +117,57 @@ function attachTopButtons() {
 
     // Import JSON
     const importBtn = document.getElementById('import-json-btn');
+    if (importBtn) {
+        importBtn.addEventListener('click', () => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            fileInput.style.display = 'none';
+
+            fileInput.addEventListener('change', event => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = e => {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        if (!imported.meta || !imported.schema) {
+                            alert('❌ Invalid capsule file.');
+                            return;
+                        }
+
+                        const id = Date.now();
+                        imported.id = id;
+                        imported.updatedAt = new Date().toISOString();
+
+                        localStorage.setItem(`pc_capsule_${id}`, JSON.stringify(imported));
+
+                        const indexKey = 'pc_capsules_index';
+                        const indexList = JSON.parse(localStorage.getItem(indexKey) || '[]');
+                        indexList.push({
+                            id,
+                            title: imported.meta.title || 'Imported Capsule',
+                            subject: imported.meta.subject || 'General',
+                            level: imported.meta.level || 'Beginner',
+                            updatedAt: imported.updatedAt
+                        });
+                        localStorage.setItem(indexKey, JSON.stringify(indexList));
+
+                        alert(`✅ Imported capsule: ${imported.meta.title || 'Untitled'}`);
+                        renderLibrary();
+                    } catch (err) {
+                        console.error(err);
+                        alert('❌ Failed to read JSON file. Make sure it is a valid capsule export.');
+                    }
+                };
+
+                reader.readAsText(file);
+            });
+
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
+        });
+    }
 }
