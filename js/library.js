@@ -171,3 +171,52 @@ function attachTopButtons() {
         });
     }
 }
+
+// Card Actions
+function attachCardActions() {
+    const container = document.getElementById('library-view'); 
+    if (!container) return;
+
+
+    document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("learn-btn")) {
+            const id = Number(e.target.dataset.id);
+            switchSection("learn"); 
+            renderLearn(id);        
+        }
+    });
+    // Edit / Author 
+    container.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const id = Number(e.target.dataset.id);
+            switchSection('author', id);
+        });
+    });
+
+    // Export
+    container.querySelectorAll('.export-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const id = Number(e.target.dataset.id);
+            exportCapsule(id);
+        });
+    });
+
+    // Delete
+    container.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const id = Number(e.target.dataset.id);
+
+            if (confirm('Are you sure you want to delete this capsule?')) {
+                // Delete from localstorage
+                localStorage.removeItem(`pc_capsule_${id}`);
+
+                const indexKey = 'pc_capsules_index';
+                const indexList = JSON.parse(localStorage.getItem(indexKey) || '[]');
+                const newIndex = indexList.filter(c => c.id !== id);
+                localStorage.setItem(indexKey, JSON.stringify(newIndex));
+
+                renderLibrary();
+            }
+        });
+    });
+}
