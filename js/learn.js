@@ -113,4 +113,121 @@ export function renderLearn(selectedId = null) {
         search.addEventListener("input", e => renderList(e.target.value));
         renderList();
     }
+
+    // Flashcard
+    function renderFlashcards() {
+        const cards = capsuleData.flashcards || [];
+        if (cards.length === 0) {
+            content.innerHTML = `<p class="text-light">No flashcards available.</p>`;
+            return;
+        }
+
+        let index = 0;
+        let flipped = false;
+        const knownSet = JSON.parse(localStorage.getItem(`known_${currentId}`) || "[]");
+
+        const sections = ["notes", "flashcards", "quiz"];
+        let currentSectionIndex = 1;
+
+        const setActiveTab = (sectionName) => {
+            const tabs = document.querySelectorAll(".nav-link");
+            tabs.forEach(tab => {
+                if (tab.dataset.section === sectionName) {
+                    tab.classList.add("active");
+                } else {
+                    tab.classList.remove("active");
+                }
+            });
+        };
+
+        const renderCard = () => {
+            const c = cards[index];
+            const known = knownSet.includes(index);
+
+            content.innerHTML = `
+                <div class="text-center">
+                    <div class="flashcard-container mb-3" style="perspective: 1000px; cursor:pointer;">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                <h5 style="user-select:none; color:#000;">${c.front}</h5>
+                            </div>
+                            <div class="flashcard-back">
+                                <h5 style="user-select:none; color:#000;">${c.back}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <button id="prevCard" aria-label="Previous Flashcard" class="btn btn-danger btn-sm">Prev</button>
+                        <div>
+                            <button id="markKnown" class="btn ${known ? 'btn-success' : 'btn-outline-success'} btn-sm me-2">
+                                ${known ? 'Known ✓' : 'Mark Known'}
+                            </button>
+                            <button id="nextCard" aria-label="Next Flashcard" class="btn btn-danger btn-sm">Next</button>
+                        </div>
+                    </div>
+                    <p class="text-light mt-2">Card ${index + 1} / ${cards.length}</p>
+                </div>
+            `;
+
+            const flashcardInner = content.querySelector(".flashcard-inner");
+            const flashcardContainer = content.querySelector(".flashcard-container");
+
+            flashcardContainer.onclick = () => {
+                flipped = !flipped;
+                flashcardInner.style.transform = flipped ? "rotateY(180deg)" : "rotateY(0deg)";
+            };
+
+            content.querySelector("#prevCard").onclick = () => {
+                index = (index - 1 + cards.length) % cards.length;
+                flipped = false;
+                renderCard();
+            };
+            content.querySelector("#nextCard").onclick = () => {
+                index = (index + 1) % cards.length;
+                flipped = false;
+                renderCard();
+            };
+
+            content.querySelector("#markKnown").onclick = () => {
+                const known = knownSet.includes(index);
+                if (known) {
+                    const idx = knownSet.indexOf(index);
+                    if (idx >= 0) knownSet.splice(idx, 1);
+                    cards[index].known = false;
+                } else {
+                    knownSet.push(index);
+                    cards[index].known = true;
+                }
+
+                localStorage.setItem(`known_${currentId}`, JSON.stringify(knownSet));
+
+                try {
+                    const capsuleKey = `pc_capsule_${currentId}`;
+                    const capsule = JSON.parse(localStorage.getItem(capsuleKey) || "{}");
+                    capsule.flashcards = cards;
+                    capsule.updatedAt = new Date().toISOString();
+                    localStorage.setItem(capsuleKey, JSON.stringify(capsule));
+                } catch (err) {
+                    console.warn("Failed to update capsule in localStorage:", err);
+                }
+
+                try {
+                    const indexList = JSON.parse(localStorage.getItem("pc_capsules_index") || "[]");
+                    const idx = indexList.findIndex(c => String(c.id) === String(currentId));
+                    if (idx >= 0) {
+                        indexList[idx].knownCards = knownSet.length;
+                        indexList[idx].updatedAt = new Date().toISOString();
+                        localStorage.setItem("pc_capsules_index", JSON.stringify(indexList));
+                    }
+                } catch (err) {
+                    console.warn("Failed to update pc_capsules_index:", err);
+                }
+
+                window.dispatchEvent(new Event("capsuleProgressUpdated"));
+
+                renderCard();
+            };
+        };
+    }
 }
