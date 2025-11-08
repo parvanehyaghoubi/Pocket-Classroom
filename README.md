@@ -9,7 +9,7 @@ It lets users **create**, **manage**, and **study** learning capsules containing
 
 ---
 
-## 🚀 Main Features
+## Main Features
 
 ### 📚 Library
 - Grid view of all saved capsules.
@@ -31,28 +31,28 @@ It lets users **create**, **manage**, and **study** learning capsules containing
 
 ---
 
-## 💾 Local Storage Keys
+## Local Storage Keys
 - `pc_capsules_index` – list of all capsules  
 - `pc_capsule_<id>` – capsule content  
 - `pc_progress_<id>` – known cards & quiz scores  
 
 ---
 
-## ⚙️ Run Locally
+## Run Locally
 1. Clone or download the repo  
 2. Open `index.html` in your browser  
 3. Everything works **offline** — no backend needed 🎉
 
 ---
 
-## 🧱 Built With
+## Built With
 - HTML5, CSS3, JavaScript (ES6)
 - Bootstrap 5
 - LocalStorage API
 
 ---
 
-## 📈 Future Ideas
+## Future Ideas
 - Cloud sync  
 - Advanced statistics  
 - Tag & search filters  
@@ -60,11 +60,25 @@ It lets users **create**, **manage**, and **study** learning capsules containing
 
 ---
 
-## 👨‍💻 Author
-**Pocket Classroom** — created by *[Parvaneh Yaghoubi]*  
-An AI & learning enthusiast passionate about smart, minimal study tools.
+## License
+This project is licensed under the terms of the [MIT License](https://github.com/parvanehyaghoubi/Pocket-Classroom/blob/main/LICENSE).
 
 ---
 
-## 🪪 License
-Released under the **MIT License** – free to use, modify, and share.
+## Contact
+For any inquiries, please contact:
+- parvaneh.yaghoubi77@gmail.com
+
+---
+
+## Links
+
+### Parvaneh Yaghoubi
+[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://parvaneh-yaghoubi.github.io/Portfolio/)
+
+[![linkedin Badge](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/parvaneh-yaghoubi-54362620b)
+
+
+<div align="center">
+  <sub>Made with ❤️ by <a href="https://parvaneh-yaghoubi.github.io/Portfolio/">Parvaneh</a></sub>
+</div>
